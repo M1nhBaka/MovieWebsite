@@ -15,6 +15,10 @@ public class UserDTO {
     private String username;
     @NotBlank(message = "Password is required")
     private String password;
+    @NotBlank
+    private String firstName;
+    @NotBlank
+    private String lastName;
     @JsonProperty("facebook_account_id")
     private int facebookAccountId;
     @JsonProperty("google_account_id")

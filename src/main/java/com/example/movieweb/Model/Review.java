@@ -2,11 +2,13 @@ package com.example.movieweb.Model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
+@Data
 public class Review extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,4 +23,6 @@ public class Review extends BaseEntity{
     @ManyToOne
     @JoinColumn(name = "movie")
     private Movie movie;
+    @Column
+    private String comment;
 }

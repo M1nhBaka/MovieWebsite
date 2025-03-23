@@ -15,19 +15,19 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-
     @Column(unique = true, name = "name")
     private String username;
     @NotBlank
     private String password;
-
     @Column(unique = true)
     private String email;
-
+    private String firstName;
+    private String lastName;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Review> reviews;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<WatchlistItem> watchlist;
+
+
 }

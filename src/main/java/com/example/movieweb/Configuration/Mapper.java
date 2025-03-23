@@ -1,4 +1,4 @@
-package com.example.movieweb.Config;
+package com.example.movieweb.Configuration;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
