@@ -14,4 +14,5 @@ public interface IWatchlistService {
     WatchlistItemDTO updateWatchedStatus(Long itemId, boolean watched);
 
     void removeFromWatchlist(Long itemId) throws ResourceNotFoundException;
+    boolean isMovieInWatchlist(String userName, Long movieId);
 }
