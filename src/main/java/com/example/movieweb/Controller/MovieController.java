@@ -1,40 +1,44 @@
 package com.example.movieweb.Controller;
 
-
-import com.example.movieweb.Model.Movie;
+import com.example.movieweb.DTO.MovieDTO;
 import com.example.movieweb.Service.IService.IMovieService;
-import com.example.movieweb.Service.MovieService;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
-@RestController
-@RequestMapping(value = "/api/movie")
+@Controller
+@RequestMapping("/movies")
 public class MovieController {
-
     @Autowired
     private IMovieService movieService;
+
     @GetMapping
-    public ResponseEntity<List<Movie>> getAllMovies() {
-        return ResponseEntity.ok(movieService.getAllMovies());
+    public String listMovies(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "12") int size,
+            @RequestParam(required = false) String search,
+            Model model) {
+        Page<MovieDTO> movies = movieService.getAllMovies(page, size, search);
+        model.addAttribute("movies", movies);
+        model.addAttribute("search", search);
+        return "movie/list";
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Movie> getMovieById(@PathVariable Long id) {
-        return ResponseEntity.ok(movieService.getMovieById(id));
+    public String getMovieDetails(@PathVariable Long id, Model model) {
+        MovieDTO movie = movieService.getMovieById(id);
+        model.addAttribute("movie", movie);
+        return "movie/details";
     }
 
-    @GetMapping("/search")
-    public ResponseEntity<List<Movie>> searchMovies(@RequestParam String query) {
-        return ResponseEntity.ok(movieService.searchMovies(query));
-    }
-
-    @PostMapping
-    public ResponseEntity<Movie> addMovie(@Valid @RequestBody Movie movie) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(movieService.addMovie(movie));
+    @GetMapping("/{id}/reviews")
+    public String getMovieReviews(
+            @PathVariable Long id,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            Model model) {
+        return "redirect:/reviews/movies/" + id;
     }
 }

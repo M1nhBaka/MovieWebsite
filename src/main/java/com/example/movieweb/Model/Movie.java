@@ -1,40 +1,50 @@
 package com.example.movieweb.Model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import java.util.Date;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 @Entity
-@Table(name = "movie")
+@Table(name = "movies")
 public class Movie {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 50)
+    @Column(length = 100, nullable = false)
     private String title;
-    @Column
+
+    @Column(length = 50, nullable = false)
     private String genre;
-    @Column
+
+    @Column(name = "release_date")
     private Date releaseDate;
-    @Column
+
+    @Column(length = 10)
     private String duration;
-    @Column
+
+    @Column(length = 1000)
     private String description;
+
     @Column
     private Float rating;
-    @Column
+
+    @Column(length = 20)
     private String language;
-    @Column
-    private String videoURL;
 
+    @Column(length = 50)
+    private String country;
 
+    @Column(length = 100)
+    private String director;
+
+    @Column(length = 500)
+    private String cast;
+
+    @Column(name = "poster_url")
+    private String posterUrl;
+
+    @Column(name = "video_url")
+    private String videoUrl;
 }

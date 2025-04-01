@@ -1,14 +1,10 @@
 package com.example.movieweb.DTO;
 
 import jakarta.validation.constraints.NotNull;
-import lombok.*;
-
+import lombok.Data;
 import java.util.Date;
+
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Getter
-@Setter
 public class MovieDTO {
     @NotNull
     private Long id;
@@ -19,6 +15,9 @@ public class MovieDTO {
     private String description;
     private Float rating;
     private String language;
-    private String videoURL;
-
+    private String country;
+    private String director;
+    private String cast;
+    private String posterUrl;
+    private String videoUrl;
 }
