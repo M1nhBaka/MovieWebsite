@@ -1,6 +1,5 @@
 package com.example.movieweb.Service;
 
-import com.example.movieweb.DTO.Request.ReviewRequest;
 import com.example.movieweb.DTO.ReviewDTO;
 import com.example.movieweb.Exception.ResourceNotFoundException;
 import com.example.movieweb.Model.Movie;
@@ -9,6 +8,8 @@ import com.example.movieweb.Model.User;
 import com.example.movieweb.Repository.MovieRepository;
 import com.example.movieweb.Repository.ReviewRepository;
 import com.example.movieweb.Repository.UserRepository;
+import com.example.movieweb.Service.IService.IReviewService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
 import org.modelmapper.ModelMapper;
@@ -25,7 +26,7 @@ import java.time.LocalDateTime;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class ReviewService {
+public class ReviewService implements IReviewService {
     private final ReviewRepository reviewRepository;
     private final UserRepository userRepository;
     private final MovieRepository movieRepository;
@@ -43,8 +44,8 @@ public class ReviewService {
         return reviewPage.map(review -> modelMapper.map(review, ReviewDTO.class));
     }
 
-    public ReviewDTO addReview(Long movieId, ReviewRequest reviewRequest) throws BadRequestException {
-        Long userId = SecurityUtils.getCurrentUserId();
+    public ReviewDTO addReview(Long movieId, ReviewDTO reviewRequest) throws BadRequestException {
+        Long userId = 1l;
 
         // Check if movie exists
         Movie movie = movieRepository.findById(movieId)
@@ -72,8 +73,8 @@ public class ReviewService {
         return modelMapper.map(savedReview, ReviewDTO.class);
     }
 
-    public ReviewDTO updateReview(Long reviewId, ReviewRequest reviewRequest) {
-        Long userId = SecurityUtils.getCurrentUserId();
+    public ReviewDTO updateReview(Long reviewId, @Valid ReviewDTO reviewDTO) {
+        Long userId = 1L;
 
         Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new ResourceNotFoundException("Review not found"));
@@ -84,8 +85,8 @@ public class ReviewService {
         }
 
         // Update review data
-        review.setRating(reviewRequest.getRating());
-        review.setComment(reviewRequest.getComment());
+        review.setRating(reviewDTO.getRating());
+        review.setComment(reviewDTO.getContent());
 
         Review updatedReview = reviewRepository.save(review);
 
@@ -96,15 +97,15 @@ public class ReviewService {
     }
 
     public void deleteReview(Long reviewId) {
-        Long userId = SecurityUtils.getCurrentUserId();
+        Long userId =1L;
 
         Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new ResourceNotFoundException("Review not found"));
 
-        // Verify ownership or admin role
-        if (!review.getUser().getId().equals(userId) && !SecurityUtils.hasRole("ADMIN")) {
-            throw new AccessDeniedException("You don't have permission to delete this review");
-        }
+//        // Verify ownership or admin role
+//        if (!review.getUser().getId().equals(userId) && !SecurityUtils.hasRole("ADMIN")) {
+//            throw new AccessDeniedException("You don't have permission to delete this review");
+//        }
 
         Long movieId = review.getMovie().getId();
         reviewRepository.delete(review);
@@ -115,7 +116,7 @@ public class ReviewService {
 
 
     public Page<ReviewDTO> getCurrentUserReviews(int page, int size) {
-        Long userId = SecurityUtils.getCurrentUserId();
+        Long userId = 1L;
 
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
         Page<Review> reviewPage = reviewRepository.findByUserId(userId, pageable);
